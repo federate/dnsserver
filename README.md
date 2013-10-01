@@ -1,4 +1,4 @@
-# Dnsserver
+# DNSServer
 
 TODO: Write a gem description
 
