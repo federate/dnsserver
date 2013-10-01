@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+
+require File.expand_path('../../lib/dnsserver', __FILE__)
+
+include IceHook::Utils
+
+opts = Slop.parse do
+  banner 'Usage: server [options]'
+
+  on :c, :config=, 'config file'
+end
+
+config = opts[:config] ? opts[:config] : nil
+
+DNSServer.run
