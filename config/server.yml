@@ -1,0 +1,21 @@
+defaults: &defaults
+  server:
+    interfaces:
+      - { protocol: udp, addr: 0.0.0.0, port: 5300 }
+  resolvers:
+    - name: google
+      servers:
+        - { protocol: udp, addr: 8.8.8.8, port: 53 }
+        - { protocol: udp, addr: 8.8.4.4, port: 53 }
+    - name: telaris
+      servers:
+        - { protocol: udp, addr: 184.173.103.52, port: 53 }
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults
