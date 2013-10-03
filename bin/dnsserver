@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+
+require File.expand_path('../../lib/dnsserver', __FILE__)
+
+runner = Dante::Runner.new('dnsserver')
+# Sets the description in 'help'
+runner.description = 'dnsserver'
+# Setup custom 'workers' option flag
+runner.with_options do |opts|
+  opts.on("-c", "--config FILE", String, "Config file") do |config|
+    options[:config] = config
+  end
+
+  opts.on("-e", "--console", String, "Console") do
+    options[:console] = true
+  end
+end
+
+# Parse command-line options and execute the process
+runner.execute do |opts|
+
+  DNSServer.init opts[:config]
+
+  if opts[:console]
+    binding.pry
+  else
+    DNSServer.run
+  end
+end
