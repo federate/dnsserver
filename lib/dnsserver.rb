@@ -12,9 +12,6 @@ require 'dnsserver/config'
 
 module DNSServer
 
-  Name = Resolv::DNS::Name
-  IN = Resolv::DNS::Resource::IN
-
   module ClassMethods
 
     attr_accessor :config_file, :environment, :logger
@@ -33,7 +30,9 @@ module DNSServer
           :name => resolver['name'],
           :resolver => RubyDNS::Resolver.new(resolver.servers.collect { |server|
                                              [server['protocol'].to_sym, server['addr'], server['port'].to_i]
-                                            })
+                                            },
+                                            :logger => DNSServer.logger,
+                                            :timeout => 1)
         }
       end
     end
@@ -46,6 +45,8 @@ module DNSServer
     def run
       RubyDNS::run_server(:listen => self.interfaces) do
 
+        @logger = DNSServer.logger
+
         DNSServer.config.matchers.each do |matcher|
           match(Regexp.new(matcher.expression)) do |transaction|
             transaction.passthrough!(DNSServer.resolver(matcher.resolver))
@@ -54,14 +55,13 @@ module DNSServer
 
         # Default DNS handler
         otherwise do |transaction|
-          transaction.passthrough!(DNSServer.resolver(DNSServer.config.matchers.default_resolver))
+          transaction.passthrough!(DNSServer.resolver(DNSServer.config.default_resolver))
         end
       end
     end
 
     def init(config_file = nil, environment = 'development')
       @environment = environment
-      @logger ||= Logger.new(STDOUT)
 
       if config_file
         @config_file = Pathname.new config_file
@@ -69,6 +69,22 @@ module DNSServer
       end
 
       DNSServer::Config.namespace @environment
+
+      init_logger
+    end
+
+    def init_logger
+      @logger = if !self.config.log || self.config.log.upcase == 'STDOUT'
+        Logger.new(STDOUT)
+      else
+        Logger.new(self.config.log)
+      end
+
+      if !self.config.log_level || self.config.log.downcase == 'debug'
+        @logger.level = Logger::DEBUG
+      else
+        @logger.level = Logger::INFO
+      end
     end
 
   end

@@ -14,12 +14,16 @@ defaults: &defaults
   matchers:
     - expression: '9605a9db-acb7-488c-9fdf-9532ce149e16.e164.arpa$'
       resolver: telaris
+  log: /home/klarrimore/Projects/dnsserver/logs/server.log
 
 development:
   <<: *defaults
+  log_level: debug
 
 test:
   <<: *defaults
+  log_level: debug
 
 production:
   <<: *defaults
+  log_level: info
