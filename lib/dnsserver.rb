@@ -49,6 +49,21 @@ module DNSServer
           transaction.passthrough!(DNSServer.resolver('telaris'))
         end
 
+        match(/federate.io$/) do |transaction|
+          #transaction.question = Resolv::DNS::Name.create(transaction.question.to_s.gsub(/federate.io$/, 'e164.org'))
+
+          original_query = transaction.question.to_s
+          new_query = original_query.gsub(/federate.io$/, 'e164.org')
+          transaction.append_query!(new_query, Resolv::DNS::Resource::Generic::Type35_Class1, :force => true)
+        end
+
+        match(/e164.org/) do |transaction|
+          transaction.passthrough(DNSServer.resolver('google'), :force => true) do |response|
+            resources = response.answer.collect { |a| a[2] }
+            transaction.append! *resources
+          end
+        end
+
         # Default DNS handler
         otherwise do |transaction|
           transaction.passthrough!(DNSServer.resolver('google'))
