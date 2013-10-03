@@ -10,6 +10,10 @@ defaults: &defaults
     - name: telaris
       servers:
         - { protocol: udp, addr: 184.173.103.52, port: 53 }
+  default_resolver: google
+  matchers:
+    - expression: '9605a9db-acb7-488c-9fdf-9532ce149e16.e164.arpa$'
+      resolver: telaris
 
 development:
   <<: *defaults

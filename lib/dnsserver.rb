@@ -45,28 +45,16 @@ module DNSServer
 
     def run
       RubyDNS::run_server(:listen => self.interfaces) do
-        match(/e164.arpa$/) do |transaction|
-          transaction.passthrough!(DNSServer.resolver('telaris'))
-        end
 
-        match(/federate.io$/) do |transaction|
-          #transaction.question = Resolv::DNS::Name.create(transaction.question.to_s.gsub(/federate.io$/, 'e164.org'))
-
-          original_query = transaction.question.to_s
-          new_query = original_query.gsub(/federate.io$/, 'e164.org')
-          transaction.append_query!(new_query, Resolv::DNS::Resource::Generic::Type35_Class1, :force => true)
-        end
-
-        match(/e164.org/) do |transaction|
-          transaction.passthrough(DNSServer.resolver('google'), :force => true) do |response|
-            resources = response.answer.collect { |a| a[2] }
-            transaction.append! *resources
+        DNSServer.config.matchers.each do |matcher|
+          match(Regexp.new(matcher.expression)) do |transaction|
+            transaction.passthrough!(DNSServer.resolver(matcher.resolver))
           end
         end
 
         # Default DNS handler
         otherwise do |transaction|
-          transaction.passthrough!(DNSServer.resolver('google'))
+          transaction.passthrough!(DNSServer.resolver(DNSServer.config.matchers.default_resolver))
         end
       end
     end
