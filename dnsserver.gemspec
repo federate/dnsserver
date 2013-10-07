@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = DNSServer::VERSION
   spec.authors       = ["Keith Larrimore"]
   spec.email         = ["keithlarrimore@gmail.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.description   = ""
+  spec.summary       = ""
   spec.homepage      = ""
   spec.license       = "MIT"
 
