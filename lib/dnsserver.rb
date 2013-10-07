@@ -81,7 +81,7 @@ module DNSServer
         Logger.new(self.config.log)
       end
 
-      if !self.config.log_level || self.config.log.downcase == 'debug'
+      if !self.config.log_level || self.config.log_level.downcase == 'debug'
         @logger.level = Logger::DEBUG
       else
         @logger.level = Logger::INFO
