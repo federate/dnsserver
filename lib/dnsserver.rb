@@ -31,6 +31,7 @@ module DNSServer
           :resolver => RubyDNS::Resolver.new(resolver.servers.collect { |server|
                                              [server['protocol'].to_sym, server['addr'], server['port'].to_i]
                                             },
+                                            :sequence_max => (resolver['sequence_max'].to_i || 65536),
                                             :logger => DNSServer.logger,
                                             :timeout => 1)
         }

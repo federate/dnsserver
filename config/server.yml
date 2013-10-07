@@ -7,12 +7,14 @@ defaults: &defaults
       servers:
         - { protocol: udp, addr: 8.8.8.8, port: 53 }
         - { protocol: udp, addr: 8.8.4.4, port: 53 }
+      sequence_max: 65536
     - name: telaris
       servers:
         - { protocol: udp, addr: 184.173.103.52, port: 53 }
+      sequence_max: 65536
   default_resolver: google
   matchers:
-    - expression: '9605a9db-acb7-488c-9fdf-9532ce149e16.e164.arpa$'
+    - expression: 'test.e164.arpa$'
       resolver: telaris
   log: /home/klarrimore/Projects/dnsserver/logs/server.log
 
