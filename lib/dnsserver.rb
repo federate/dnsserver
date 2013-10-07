@@ -50,12 +50,14 @@ module DNSServer
 
         DNSServer.config.matchers.each do |matcher|
           match(Regexp.new(matcher.expression)) do |transaction|
+            transaction.defer!
             transaction.passthrough!(DNSServer.resolver(matcher.resolver))
           end
         end
 
         # Default DNS handler
         otherwise do |transaction|
+          transaction.defer!
           transaction.passthrough!(DNSServer.resolver(DNSServer.config.default_resolver))
         end
       end
