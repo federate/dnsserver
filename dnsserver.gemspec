@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'slop', '~> 3.4.6'
   spec.add_runtime_dependency 'settingslogic', '~> 2.0.8'
   spec.add_runtime_dependency 'hashie', '~> 2.0.2'
-  spec.add_runtime_dependency 'rubydns', '~> 0.6.5'
+  spec.add_runtime_dependency 'rubydns', '~> 0.6.6'
   spec.add_runtime_dependency 'dante', '~> 0.1.5'
   spec.add_runtime_dependency 'pry', '~> 0.9.10'
   spec.add_runtime_dependency 'god', '~> 0.13.3'
