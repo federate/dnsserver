@@ -50,14 +50,39 @@ module DNSServer
 
         DNSServer.config.matchers.each do |matcher|
           match(Regexp.new(matcher.expression)) do |transaction|
-            transaction.defer!
-            transaction.passthrough!(DNSServer.resolver(matcher.resolver))
+            if matcher.question_matcher && matcher.question_template
+              question_matcher_regexp = Regexp.new matcher.question_matcher
+
+              transaction.query.question.each do |question|
+                name, klass = question
+                name = name.to_s.sub(/.{1}$/, '')
+                matches = name.match question_matcher_regexp
+                if matches && matches[1]
+                  q = Resolv::DNS::Name.create(matcher.question_template.gsub('${match}', matches[1]))
+                  resolver = DNSServer.resolver(matcher.resolver)
+                  @resp = resolver.query(q, transaction.resource_class)
+                  transaction.add [@resp.answer.first.last]
+                end
+
+              end
+            end
+            #transaction.question = q
+            #@trans = transaction
+            #@resp = resolver.query(q, transaction.resource_class)
+            #response = transaction.passthrough(DNSServer.resolver(matcher.resolver), :name => q.to_s)
+            #@logger.info @resp.answer.inspect
+            #transaction.response.merge! response
+            #resources = []
+
+            #pry.binding
+
+            #transaction.add [@resp.answer.first.last]
+            #transaction.respond!(response)
           end
         end
 
         # Default DNS handler
         otherwise do |transaction|
-          transaction.defer!
           transaction.passthrough!(DNSServer.resolver(DNSServer.config.default_resolver))
         end
       end

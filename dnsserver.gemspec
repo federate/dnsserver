@@ -4,27 +4,34 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'dnsserver/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "dnsserver"
+  spec.name          = 'dnsserver'
   spec.version       = DNSServer::VERSION
-  spec.authors       = ["Keith Larrimore"]
-  spec.email         = ["keithlarrimore@gmail.com"]
-  spec.description   = ""
-  spec.summary       = ""
-  spec.homepage      = ""
-  spec.license       = "MIT"
+  spec.authors       = ['Keith Larrimore']
+  spec.email         = ['keithlarrimore@gmail.com']
+  spec.description   = ''
+  spec.summary       = ''
+  spec.homepage      = ''
+  spec.license       = 'MIT'
 
   spec.files         = `git ls-files`.split($/)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
-  spec.require_paths = ["lib"]
+  spec.require_paths = ['lib']
 
-  spec.add_development_dependency "bundler", "~> 1.3"
-  spec.add_development_dependency "rake"
+  spec.add_development_dependency 'bundler', '~> 1.3'
+  spec.add_development_dependency 'rake'
+  spec.add_development_dependency 'rspec', '>= 3.0.0'
+  spec.add_development_dependency 'ffaker', '~> 1.15.0'
+  spec.add_development_dependency 'machinist', '~> 2.0'
+  spec.add_development_dependency 'webmock', '~> 1.9.3'
+  spec.add_development_dependency 'guard-rspec', '~> 4.5.0'
+  spec.add_development_dependency 'rb-fsevent', '~> 0.9.3'
+  spec.add_development_dependency 'simplecov', '~> 0.7.1'
   spec.add_runtime_dependency 'awesome_print', '~> 1.1.0'
   spec.add_runtime_dependency 'slop', '~> 3.4.6'
   spec.add_runtime_dependency 'settingslogic', '~> 2.0.8'
   spec.add_runtime_dependency 'hashie', '~> 2.0.2'
-  spec.add_runtime_dependency 'rubydns', '~> 0.6.6'
+  spec.add_runtime_dependency 'rubydns', '~> 1.0.0'
   spec.add_runtime_dependency 'dante', '~> 0.1.5'
   spec.add_runtime_dependency 'pry', '~> 0.9.10'
   spec.add_runtime_dependency 'god', '~> 0.13.3'

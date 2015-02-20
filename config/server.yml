@@ -8,15 +8,17 @@ defaults: &defaults
         - { protocol: udp, addr: 8.8.8.8, port: 53 }
         - { protocol: udp, addr: 8.8.4.4, port: 53 }
       sequence_max: 65536
-    - name: telaris
+    - name: mosaic
       servers:
-        - { protocol: udp, addr: 184.173.103.52, port: 53 }
+        - { protocol: udp, addr: 207.198.118.90, port: 53 }
       sequence_max: 65536
   default_resolver: google
   matchers:
-    - expression: 'test.e164.arpa$'
-      resolver: telaris
-  log: /home/klarrimore/Projects/dnsserver/logs/server.log
+    - expression: '0\.0\.8\.1\.tnsi\.com$'
+      resolver: mosaic
+      question_matcher: '(.*).{1}tnsi\.com$'
+      question_template: '${match}.mosaic.tollfree.tnsi.com'
+  log: /home/klarrimore/Projects/dnsserver/tmp/logs/server.log
 
 development:
   <<: *defaults

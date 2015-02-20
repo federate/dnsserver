@@ -16,4 +16,5 @@ test/tmp
 test/version_tmp
 tmp
 logs
+tmp/logs
 config/*
