@@ -55,29 +55,20 @@ module DNSServer
 
               transaction.query.question.each do |question|
                 name, klass = question
-                name = name.to_s.sub(/.{1}$/, '')
+                name = name.to_s.sub(/\.{1}$/, '')
                 matches = name.match question_matcher_regexp
                 if matches && matches[1]
                   q = Resolv::DNS::Name.create(matcher.question_template.gsub('${match}', matches[1]))
                   resolver = DNSServer.resolver(matcher.resolver)
                   @resp = resolver.query(q, transaction.resource_class)
-                  transaction.add [@resp.answer.first.last]
+
+                  if @resp && !@resp.answer.empty?
+                    @resp.answer.each { |a| transaction.add [a.last] unless a.empty? }
+                  end
                 end
-
               end
+
             end
-            #transaction.question = q
-            #@trans = transaction
-            #@resp = resolver.query(q, transaction.resource_class)
-            #response = transaction.passthrough(DNSServer.resolver(matcher.resolver), :name => q.to_s)
-            #@logger.info @resp.answer.inspect
-            #transaction.response.merge! response
-            #resources = []
-
-            #pry.binding
-
-            #transaction.add [@resp.answer.first.last]
-            #transaction.respond!(response)
           end
         end
 
