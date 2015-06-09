@@ -10,18 +10,24 @@ defaults: &defaults
       sequence_max: 65536
     - name: mosaic
       servers:
-        - { protocol: udp, addr: 207.198.118.90, port: 53 }
+        - { protocol: udp, addr: 8.8.8.8, port: 53 }
       sequence_max: 65536
   default_resolver: google
   matchers:
-    - expression: '0\.2\.5\.1\.tnsi\.com$'
+    - expression: '0\.0\.8\.1\.tnsi\.com$'
       resolver: mosaic
       question_matcher: '(.*)\.tnsi\.com$'
       question_template: '${match}.mosaic.nrd.tnsi.com'
+      answer_substitutions:
+        'spid': cic
+        'npdi': foof
     - expression: '\.tnsi\.com$'
       resolver: mosaic
       question_matcher: '(.*)\.tnsi\.com$'
       question_template: '${match}.mosaic.nrd.tnsi.com'
+      answer_substitutions:
+        'spid': cic
+        'npdi': foof
   log: /home/klarrimore/Projects/dnsserver/tmp/logs/server.log
 
 development:

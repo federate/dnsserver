@@ -57,15 +57,28 @@ module DNSServer
                 name, klass = question
                 name = name.to_s.sub(/\.{1}$/, '')
                 matches = name.match question_matcher_regexp
+
                 if matches && matches[1]
                   q = Resolv::DNS::Name.create(matcher.question_template.gsub('${match}', matches[1]))
                   resolver = DNSServer.resolver(matcher.resolver)
                   @resp = resolver.query(q, transaction.resource_class)
 
                   if @resp && !@resp.answer.empty?
-                    @resp.answer.each { |a| transaction.add [a.last] unless a.empty? }
+                    @resp.answer.each do |answer|
+                      a = answer.last unless answer.empty?
+                      next unless a
+
+                      if matcher.answer_substitutions && !matcher.answer_substitutions.empty?
+                        matcher.answer_substitutions.each do |m,s|
+                          a = Resolv::DNS::Resource::Generic::Type35_Class1.new a.data.gsub(Regexp.new(m), s)
+                        end
+                      end
+
+                      transaction.add [a]
+                    end
                   end
                 end
+
               end
 
             end
