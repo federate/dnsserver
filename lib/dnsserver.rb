@@ -51,7 +51,7 @@ module DNSServer
 
         DNSServer.config.matchers.each do |matcher|
           match(Regexp.new(matcher.expression)) do |transaction|
-            if matcher.question_matcher && matcher.question_template
+            if matcher.respond_to?(:question_matcher) && matcher.respond_to?(:question_template)
               question_matcher_regexp = Regexp.new matcher.question_matcher
 
               transaction.query.question.each do |question|
@@ -67,9 +67,9 @@ module DNSServer
                   if @resp && !@resp.answer.empty?
                     @resp.answer.each do |answer|
                       a = answer.last unless answer.empty?
-                      next unless a                      
+                      next unless a
 
-                      if matcher.answer_substitutions && !matcher.answer_substitutions.empty?
+                      if matcher.respond_to?(:answer_substitutions) && !matcher.answer_substitutions.empty?
                         matcher.answer_substitutions.each do |m,s|
                           a.regex = a.regex.gsub(Regexp.new(m), s)
                         end

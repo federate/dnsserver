@@ -10,7 +10,7 @@ defaults: &defaults
       sequence_max: 65536
     - name: mosaic
       servers:
-        - { protocol: udp, addr: 127.0.0.1, port: 53 }
+        - { protocol: udp, addr: 207.198.118.90, port: 53 }
       sequence_max: 65536
   default_resolver: google
   matchers:
