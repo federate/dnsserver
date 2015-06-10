@@ -7,6 +7,7 @@ require 'dante'
 require 'pry'
 require 'rubydns'
 require 'pathname'
+require 'ext/naptr'
 require 'dnsserver/version'
 require 'dnsserver/config'
 
@@ -66,11 +67,11 @@ module DNSServer
                   if @resp && !@resp.answer.empty?
                     @resp.answer.each do |answer|
                       a = answer.last unless answer.empty?
-                      next unless a
+                      next unless a                      
 
                       if matcher.answer_substitutions && !matcher.answer_substitutions.empty?
                         matcher.answer_substitutions.each do |m,s|
-                          a = Resolv::DNS::Resource::Generic::Type35_Class1.new a.data.gsub(Regexp.new(m), s)
+                          a.regex = a.regex.gsub(Regexp.new(m), s)
                         end
                       end
 
